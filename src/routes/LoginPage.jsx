@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useUserStore } from '../store/userStore.js'
 import { useNavigate } from 'react-router-dom'
@@ -7,28 +7,27 @@ import { post } from '../api/index.js'
 const LoginPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const { setUser } = useUserStore();
+  const user = useUserStore(state => state);
   const navigate = useNavigate();
   const [loginStatus, setLoginStatus] = useState('');
 
+  useEffect(() => {
+    if (user.id != null) {
+      navigate('/notes')
+    }
+  }, [])
+
   const onSubmit = async ({ email, password }) => {
-    // TODO: Login a api
-
     const response = await post('/auth/login', { email, password })
-    console.log(response)
 
-    // const user = {
-    //   id: 1,
-    //   username: 'Pepe',
-    //   firstname: 'Pepe',
-    //   lastname: 'Argento',
-    //   email: 'pepe@pepe.com',
-    //   birthdate: '11-11-11',
-    // }
+    if (response.status == 'error') {
+      setLoginStatus(response.data)
+    }
 
-    // if (user.id != null) {
-    //   setUser(user);
-    //   navigate('/notes')
-    // }
+    if (response.id != null) {
+      setUser(response);
+      navigate('/groups')
+    }
 
   };
 

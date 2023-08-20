@@ -47,11 +47,13 @@ const NoteEditor = ({ note, onSave, onDelete, onCancel }) => {
           {errors.text && <p className="text-red-500">Required field</p>}
         </div>
         <div className="flex justify-end gap-5">
-          <button type='button' onClick={handleCancel} className="px-4 py-2 text-white rounded bg-neutral-500">Cancel</button>
+          {
+            note.id != -1 && <button type='button' onClick={handleCancel} className="px-4 py-2 text-white rounded bg-neutral-500">Cancel</button>
+          }
           <button type="submit" className="px-4 py-2 text-white bg-blue-500 rounded">
-            {note ? 'Update' : 'Create'}
+            {note && note.id != -1 ? 'Update' : 'Create'}
           </button>
-          {note && (
+          {note && note.id != -1 && (
             <button type="button" onClick={handleDelete} className="px-4 py-2 text-white bg-red-500 rounded">
               Delete
             </button>

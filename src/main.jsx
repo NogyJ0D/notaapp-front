@@ -13,6 +13,7 @@ import LoginPage from './routes/LoginPage.jsx'
 import Index from './routes/Index'
 import NotePage from './routes/NotePage'
 import SignupPage from './routes/SignupPage'
+import GroupsPage from './routes/GroupsPage'
 
 const router = createBrowserRouter([
   {
@@ -29,7 +30,11 @@ const router = createBrowserRouter([
         element: <LoginPage />
       },
       {
-        path: '/notes',
+        path: '/groups',
+        element: <GroupsPage />
+      },
+      {
+        path: '/notes/:groupId',
         element: <NotePage />
       },
       {

@@ -2,42 +2,29 @@ import { useEffect, useState } from 'react';
 import Note from '../components/Note.jsx';
 import NoteEditor from '../components/NoteEditor.jsx';
 import { useUserStore } from '../store/userStore.js'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { get } from '../api/index.js'
 
 const NotePage = () => {
+  const { groupId } = useParams();
   const user = useUserStore(state => state);
   const navigate = useNavigate();
+  const [notes, setNotes] = useState([]);
+  const [selectedNote, setSelectedNote] = useState(null);
 
   useEffect(() => {
     if (user.id === null) {
       navigate('/login');
     } else {
-      console.log('Logged');
+      loadUserNotes();
+      setSelectedNote({"id": -1, "title": "", "text": ""})
     }
   }, [])
   
-  const [notes, setNotes] = useState([
-    { id: 1, title: 'Note 1', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elitaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbb.' },
-    { id: 2, title: 'Note 2', text: 'Praesent in dolor auctor, gravida sem nec, gravida tellus.' },
-    { id: 3, title: 'Note 3', text: 'Vestibulum nec metus et lectus lacinia rhoncus.' },
-    { id: 4, title: 'Note 4', text: 'Suspendisse ac nunc quis elit interdum scelerisque.' },
-    { id: 5, title: 'Note 4', text: 'Suspendisse ac nunc quis elit interdum scelerisque.' },
-    { id: 6, title: 'Note 4', text: 'Suspendisse ac nunc quis elit interdum scelerisque.' },
-    { id: 7, title: 'Note 4', text: 'Suspendisse ac nunc quis elit interdum scelerisque.' },
-    { id: 8, title: 'Note 4', text: 'Suspendisse ac nunc quis elit interdum scelerisque.' },
-    { id: 9, title: 'Note 4', text: 'Suspendisse ac nunc quis elit interdum scelerisque.' },
-    { id: 10, title: 'Note 4', text: 'Suspendisse ac nunc quis elit interdum scelerisque.' },
-    { id: 11, title: 'Note 4', text: 'Suspendisse ac nunc quis elit interdum scelerisque.' },
-    { id: 12, title: 'Note 5', text: 'Suspendisse ac nunc quis elit interdum scelerisque.' },
-    { id: 13, title: 'Note 5', text: 'Suspendisse ac nunc quis elit interdum scelerisque.' },
-    { id: 14, title: 'Note 5', text: 'Suspendisse ac nunc quis elit interdum scelerisque.' },
-    { id: 15, title: 'Note 5', text: 'Suspendisse ac nunc quis elit interdum scelerisque.' },
-    { id: 16, title: 'Note 5', text: 'Suspendisse ac nunc quis elit interdum scelerisque.' },
-    { id: 17, title: 'Note 5', text: 'Suspendisse ac nunc quis elit interdum scelerisque.' },
-    { id: 18, title: 'Note 5', text: 'Suspendisse ac nunc quis elit interdum scelerisque.' },
-    { id: 19, title: 'Note 5', text: 'Suspendisse ac nunc quis elit interdum scelerisque.' }
-  ]);
-  const [selectedNote, setSelectedNote] = useState(null);
+  const loadUserNotes = async () => {
+    const response = await get('/notes/user_id/' + user.id + '/group_id/' + groupId)
+    setNotes(response)
+  }
 
   const handleNoteClick = (note) => {
     setSelectedNote(note);
@@ -75,7 +62,7 @@ const NotePage = () => {
           onCancel={handleCancel}
         />
       )}
-      <div className='flex flex-row flex-wrap gap-10 p-6 bg-red-300'>
+      <div className='flex flex-row flex-wrap gap-10 p-6'>
         {notes.map((note) => (
           <Note
             key={note.id}

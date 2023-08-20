@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useUserStore } from '../store/userStore.js';
 import { useNavigate } from 'react-router-dom';
+import { post } from '../api/index.js'
 
 const SignupPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -9,21 +10,27 @@ const SignupPage = () => {
   const navigate = useNavigate();
   const [registerStatus, setRegisterStatus] = useState('');
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     // TODO: registrar en la api
 
     const user = {
-      id: 2,
       username: data.username,
       firstname: data.firstname,
       lastname: data.lastname,
       email: data.email,
       birthdate: data.birthdate,
-    };
+      password: data.password
+    }
 
-    if (user.id != null) {
-      setUser(user);
-      navigate('/notes');
+    const response = await post('/auth/signup', user)
+
+    if (response.status == 'error') {
+      setRegisterStatus(response.data)
+    }
+
+    if (response.id != null) {
+      setUser(response);
+      navigate('/groups')
     }
   };
 

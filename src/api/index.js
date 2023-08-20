@@ -1,38 +1,60 @@
 import axios from 'axios';
-import { URL } from '../config';
 
-const instance = axios.create({
-  baseURL: URL
-});
+// const instance = axios.create({
+//   baseURL: '127.0.0.1:8080'
+// });
+
+const URL = 'http://localhost:8080';
+const DEBUG = true;
 
 const get = (url) => {
-  return instance.get(url, { withCredentials: true })
-    .then(res => { return res })
-    .catch(err => { return err })
+  return axios.get(URL + url, { withCredentials: false })
+    .then(res => {
+      DEBUG && console.log(res);
+      return res.data.data;
+    })
+    .catch(err => {
+      DEBUG && console.log(err);
+      return err.response.data;
+    })
 }
 
 const post = (url, data) => {
-  console.log(url)
-  console.log(data)
-  return instance.post(url, data, { withCredentials: false })
-    .then(res => { 
-      console.log(res)
-      return res
-     })
-    .catch(err => { return err })
+  DEBUG && console.log(data);
+  return axios.post(URL + url, data, { withCredentials: false })
+    .then(res => {
+      DEBUG && console.log(res);
+      return res.data.data;
+    })
+    .catch(err => {
+      DEBUG && console.log(err);
+      return err.response.data;
+    })
 }
 
 const put = (url, data) => {
-  return instance.put(url, data, { withCredentials: true })
-    .then(res => { return res })
-    .catch(err => { return err })
+  DEBUG && console.log(data);
+  return axios.put(URL + url, data, { withCredentials: false })
+    .then(res => {
+      DEBUG && console.log(res);
+      return res.data.data;
+    })
+    .catch(err => {
+      DEBUG && console.log(err);
+      return err.response.data;
+    })
 }
 
 const del = (url) => {
-  return instance.delete(url, { withCredentials: true })
-    .then(res => { return res })
-    .catch(err => { return err })
+  return axios.delete(URL + url, { withCredentials: false })
+    .then(res => {
+      DEBUG && console.log(res);
+      return res.data.data;
+    })
+    .catch(err => {
+      DEBUG && console.log(err);
+      return err.response.data;
+    })
 }
 
-export default instance
 export { get, post, put, del }
