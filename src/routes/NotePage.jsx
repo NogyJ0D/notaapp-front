@@ -3,7 +3,7 @@ import Note from '../components/Note.jsx';
 import NoteEditor from '../components/NoteEditor.jsx';
 import { useUserStore } from '../store/userStore.js'
 import { useNavigate, useParams } from 'react-router-dom'
-import { get } from '../api/index.js'
+import { get, put } from '../api/index.js'
 
 const NotePage = () => {
   const { groupId } = useParams();
@@ -31,14 +31,17 @@ const NotePage = () => {
     window.scrollTo(0, 0);
   };
 
-  const handleSaveNote = (data) => {
-    const updatedNotes = notes.map((note) => {
-      if (note.id === selectedNote.id) {
-        return { ...note, ...data };
-      }
-      return note;
-    });
-    setNotes(updatedNotes);
+  const handleSaveNote = async (data) => {
+    const response = await put('/notes/' + data.id)
+
+    // const updatedNotes = notes.map((note) => {
+    //   if (note.id === selectedNote.id) {
+    //     return { ...note, ...data };
+    //   }
+    //   return note;
+    // });
+
+    await loadUserNotes()
     setSelectedNote(null);
   };
 

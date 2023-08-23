@@ -6,7 +6,10 @@ const NoteEditor = ({ note, onSave, onDelete, onCancel }) => {
   const [isEditing, setIsEditing] = useState(!note); // Determina si se está editando o creando una nueva nota
 
   const onSubmit = (data) => {
-    onSave(data);
+    note.title = data.title
+    note.text = data.text
+
+    onSave(note)
     setIsEditing(false);
   }
 
