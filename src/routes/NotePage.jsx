@@ -3,21 +3,22 @@ import Note from '../components/Note.jsx';
 import NoteEditor from '../components/NoteEditor.jsx';
 import { useUserStore } from '../store/userStore.js'
 import { useNavigate, useParams } from 'react-router-dom'
-import { get, put } from '../api/index.js'
+import { get, post, put } from '../api/index.js'
 
 const NotePage = () => {
   const { groupId } = useParams();
   const user = useUserStore(state => state);
   const navigate = useNavigate();
   const [notes, setNotes] = useState([]);
-  const [selectedNote, setSelectedNote] = useState(null);
+  const notePlaceholder = {"id": -1, "title": "", "text": ""};
+  const [selectedNote, setSelectedNote] = useState(notePlaceholder);
 
   useEffect(() => {
     if (user.id === null) {
       navigate('/login');
     } else {
       loadUserNotes();
-      setSelectedNote({"id": -1, "title": "", "text": ""})
+      setSelectedNote(notePlaceholder)
     }
   }, [])
   
@@ -32,39 +33,41 @@ const NotePage = () => {
   };
 
   const handleSaveNote = async (data) => {
-    const response = await put('/notes/' + data.id)
+    console.log('data')
+    console.log(data)
+    
+    data.user = { "id": parseInt(user.id) }
+    data.group = { "id": parseInt(groupId) }
 
-    // const updatedNotes = notes.map((note) => {
-    //   if (note.id === selectedNote.id) {
-    //     return { ...note, ...data };
-    //   }
-    //   return note;
-    // });
+    if (data.id === -1) {
+      const response = await post('/notes', data)
+    } else {
+      const response = await put('/notes/' + data.id)
+    }    
 
     await loadUserNotes()
-    setSelectedNote(null);
+    setSelectedNote(notePlaceholder);
   };
 
   const handleDeleteNote = () => {
     const filteredNotes = notes.filter((note) => note.id !== selectedNote.id);
     setNotes(filteredNotes);
-    setSelectedNote(null);
+    setSelectedNote(notePlaceholder);
   };
 
   const handleCancel = () => {
-    setSelectedNote(null);
+    setSelectedNote(notePlaceholder);
   }
 
   return (
     <div className='flex flex-col justify-between w-full place-self-start'>
-      {selectedNote && (
-        <NoteEditor
-          note={selectedNote}
-          onSave={handleSaveNote}
-          onDelete={handleDeleteNote}
-          onCancel={handleCancel}
-        />
-      )}
+      <NoteEditor
+        note={selectedNote}
+        onSave={handleSaveNote}
+        onDelete={handleDeleteNote}
+        onCancel={handleCancel}
+      />
+      
       <div className='flex flex-row flex-wrap gap-10 p-6'>
         {notes.map((note) => (
           <Note

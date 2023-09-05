@@ -5,7 +5,7 @@ import axios from 'axios';
 // });
 
 const URL = 'http://localhost:8080';
-const DEBUG = true;
+const DEBUG = false;
 
 const get = (url) => {
   return axios.get(URL + url, { withCredentials: false })

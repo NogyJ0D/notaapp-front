@@ -19,7 +19,6 @@ const Header = () => {
             ? <NavLink to={'/groups'} className={'bg-slate-700 p-2 rounded-md border-white border-[1px]'}>Groups</NavLink>
             : <NavLink to={'/login'} className={'bg-slate-700 p-2 rounded-md border-white border-[1px]'}>Login</NavLink>
         }
-        {/* <NavLink to={'/groups'} className={'bg-slate-700 p-2 rounded-md border-white border-[1px]'}>Groups</NavLink> */}
       </div>
     </header>
   );

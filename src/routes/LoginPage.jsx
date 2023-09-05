@@ -33,8 +33,6 @@ const LoginPage = () => {
 
   const handleSignup = (e) => {
     navigate('/signup')
-
-    console.log("Registro");
   }
 
   return (

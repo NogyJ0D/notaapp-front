@@ -6,10 +6,10 @@ const NoteEditor = ({ note, onSave, onDelete, onCancel }) => {
   const [isEditing, setIsEditing] = useState(!note); // Determina si se está editando o creando una nueva nota
 
   const onSubmit = (data) => {
-    note.title = data.title
-    note.text = data.text
+    note.title = data.title;
+    note.text = data.text;
 
-    onSave(note)
+    onSave(note);
     setIsEditing(false);
   }
 
@@ -35,7 +35,7 @@ const NoteEditor = ({ note, onSave, onDelete, onCancel }) => {
             type="text"
             id="title"
             className="w-full p-2 rounded"
-            defaultValue={note ? note.title : ''}
+            defaultValue={note.title} // Usar defaultValue en lugar de value
             {...register('title')}
           />
         </div>
@@ -45,7 +45,7 @@ const NoteEditor = ({ note, onSave, onDelete, onCancel }) => {
             id="text"
             className={`w-full p-2 rounded ${errors.text ? 'border-red-500' : ''}`}
             {...register('text', { required: true })}
-            defaultValue={note ? note.text : ''}
+            defaultValue={note.text} // Usar defaultValue en lugar de value
           />
           {errors.text && <p className="text-red-500">Required field</p>}
         </div>
